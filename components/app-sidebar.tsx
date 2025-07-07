@@ -1,7 +1,13 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Home, Users, Package, Settings } from 'lucide-react'
+import {
+  Home,
+  Users,
+  Package,
+  Settings,
+  LayoutDashboard // ⬅️ nuevo icono para la ruta Dashboard
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -15,10 +21,17 @@ import {
 } from '@/components/ui/sidebar'
 import { SidebarToggleButton } from './sidebar-toggle-button'
 
+/* -------------------------------------------------------------
+ * NUEVA RUTA AÑADIDA:
+ *  - title: "Dashboard"
+ *  - icon : LayoutDashboard
+ *  - url  : "/dashboard"
+ * ------------------------------------------------------------ */
 const mainNavigation = [
   { title: 'Inicio', icon: Home, url: '#', isActive: true },
   { title: 'Usuarios', icon: Users, url: '#' },
-  { title: 'Productos', icon: Package, url: '#' }
+  { title: 'Productos', icon: Package, url: '#' },
+  { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' }
 ]
 
 export function AppSidebar() {
@@ -26,6 +39,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible='icon' className='bg-[#1E293B] text-white'>
+      {/* ---------- CONTENIDO PRINCIPAL ---------- */}
       <SidebarContent className='bg-[#1E293B]'>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -70,6 +84,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
+      {/* ---------- FOOTER ---------- */}
       <SidebarFooter className='bg-[#1E293B]'>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -108,6 +123,7 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
 
+      {/* ---------- BOTÓN DE COLAPSO ---------- */}
       <SidebarToggleButton />
     </Sidebar>
   )

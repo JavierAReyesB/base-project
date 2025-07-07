@@ -20,6 +20,7 @@ import {
   X,
   GripVertical
 } from 'lucide-react'
+import { PageWrapper } from '@/app/layout/PageWrapper'
 import { cn } from '@/lib/utils'
 
 // Tipos de widgets disponibles
@@ -554,29 +555,9 @@ export default function CustomizableDashboard() {
 
   return (
     <div className='min-h-screen bg-background'>
-      {/* Header */}
-      <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-        <div className='container flex h-14 items-center'>
-          <div className='mr-4 flex'>
-            <Button
-              variant='ghost'
-              size='icon'
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              <Settings className='h-4 w-4' />
-            </Button>
-          </div>
-          <div className='flex flex-1 items-center justify-between space-x-2 md:justify-end'>
-            <h1 className='text-lg font-semibold'>Mi Dashboard</h1>
-            <div className='flex items-center space-x-2'>
-              <Badge variant='outline'>{widgets.length} widgets</Badge>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      {/* 1️⃣  Fila principal: Sidebar + Columna de contenido */}
       <div className='flex'>
-        {/* Sidebar */}
+        {/* ════════════ Sidebar (columna 1) ════════════ */}
         <aside
           className={cn(
             'sticky top-14 h-[calc(100vh-3.5rem)] w-80 border-r bg-muted/40 transition-all duration-300',
@@ -585,6 +566,8 @@ export default function CustomizableDashboard() {
         >
           <div className='p-4'>
             <h2 className='mb-4 text-lg font-semibold'>Widgets Disponibles</h2>
+
+            {/* Lista de botones para añadir widgets */}
             <div className='space-y-2'>
               {AVAILABLE_WIDGETS.map((widget) => {
                 const Icon = widget.icon
@@ -610,131 +593,169 @@ export default function CustomizableDashboard() {
           </div>
         </aside>
 
-        {/* Main Content */}
-        <main className='flex-1 p-6'>
-          {widgets.length === 0 ? (
-            <div className='flex h-[60vh] items-center justify-center'>
-              <div className='text-center'>
-                <div className='mx-auto mb-4 h-12 w-12 rounded-full bg-muted flex items-center justify-center'>
-                  <Plus className='h-6 w-6' />
-                </div>
-                <h3 className='text-lg font-semibold'>No hay widgets</h3>
-                <p className='text-muted-foreground mb-4'>
-                  Añade widgets desde el panel lateral para comenzar
-                </p>
-                <Button onClick={() => setSidebarOpen(true)}>
-                  Abrir Panel de Widgets
+        {/* ════════════ Columna 2: Header gris + contenido ════════════ */}
+        <div className='flex-1 flex flex-col'>
+          {/* 2️⃣  Header gris fijo (debajo del header global azul) */}
+          {/* <header className='sticky top-14 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+            <div className='container flex h-14 items-center'> */}
+          {/* Botón para abrir / cerrar sidebar */}
+          {/* <div className='mr-4 flex'>
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                >
+                  <Settings className='h-4 w-4' />
                 </Button>
+              </div> */}
+
+          {/* Título + contador de widgets */}
+          {/* <div className='flex flex-1 items-center justify-between space-x-2 md:justify-end'>
+                <h1 className='text-lg font-semibold'>Mi Dashboard</h1>
+                <div className='flex items-center space-x-2'>
+                  <Badge variant='outline'>{widgets.length} widgets</Badge>
+                </div>
               </div>
             </div>
-          ) : (
-            <div
-              ref={canvasRef}
-              className='relative min-h-[calc(100vh-8rem)] w-full'
-              style={{ userSelect: draggedWidget ? 'none' : 'auto' }}
-            >
-              {widgets.map((widget) => (
-                <div
-                  key={widget.id}
-                  className={cn(
-                    'absolute transition-shadow duration-200',
-                    draggedWidget === widget.id && 'shadow-2xl'
-                  )}
-                  style={{
-                    left: widget.position.x,
-                    top: widget.position.y,
-                    width: widget.size.width,
-                    height: widget.size.height,
-                    zIndex: widget.zIndex,
-                    cursor: draggedWidget === widget.id ? 'grabbing' : 'default'
-                  }}
-                  onMouseDown={() => bringToFront(widget.id)}
-                >
-                  <Card className='h-full'>
-                    <CardHeader
-                      className='flex flex-row items-center justify-between space-y-0 pb-2 cursor-grab active:cursor-grabbing'
-                      onMouseDown={(e) => handleMouseDown(e, widget.id)}
-                    >
-                      <div className='flex items-center gap-2'>
-                        <GripVertical className='h-4 w-4 text-muted-foreground' />
-                        <CardTitle className='text-sm font-medium'>
-                          {widget.title}
-                        </CardTitle>
-                      </div>
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        className='h-6 w-6'
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          removeWidget(widget.id)
-                        }}
-                      >
-                        <X className='h-3 w-3' />
-                      </Button>
-                    </CardHeader>
-                    <CardContent className='p-0 h-[calc(100%-4rem)] overflow-hidden'>
-                      {renderWidgetContent(widget.type)}
-                    </CardContent>
-                  </Card>
+          </header> */}
 
-                  {/* Resize Handle */}
-                  <div
-                    className='absolute bottom-0 right-0 w-4 h-4 cursor-se-resize opacity-50 hover:opacity-100'
-                    style={{
-                      background:
-                        'linear-gradient(-45deg, transparent 30%, #666 30%, #666 40%, transparent 40%, transparent 60%, #666 60%, #666 70%, transparent 70%)'
-                    }}
-                    onMouseDown={(e) => {
-                      e.stopPropagation()
-                      handleResizeStart(widget.id)
-
-                      const startX = e.clientX
-                      const startY = e.clientY
-                      const startWidth = widget.size.width
-                      const startHeight = widget.size.height
-
-                      const handleMouseMove = (e: MouseEvent) => {
-                        const newWidth = Math.max(
-                          200,
-                          startWidth + (e.clientX - startX)
-                        )
-                        const newHeight = Math.max(
-                          150,
-                          startHeight + (e.clientY - startY)
-                        )
-
-                        setWidgets((prev) =>
-                          prev.map((w) =>
-                            w.id === widget.id
-                              ? {
-                                  ...w,
-                                  size: { width: newWidth, height: newHeight }
-                                }
-                              : w
-                          )
-                        )
-                      }
-
-                      const handleMouseUp = () => {
-                        handleResizeEnd()
-                        document.removeEventListener(
-                          'mousemove',
-                          handleMouseMove
-                        )
-                        document.removeEventListener('mouseup', handleMouseUp)
-                      }
-
-                      document.addEventListener('mousemove', handleMouseMove)
-                      document.addEventListener('mouseup', handleMouseUp)
-                    }}
-                  />
+          {/* 3️⃣  Área scrolleable con PageWrapper */}
+          <PageWrapper
+            title='Dashboard'
+            description='Panel personalizable de widgets.'
+            className='flex-1 p-6 pt-14' /* pt-14 evita que el header gris tape el contenido */
+          >
+            {/* --------- Si aún no hay widgets --------- */}
+            {widgets.length === 0 ? (
+              <div className='flex h-[60vh] items-center justify-center'>
+                <div className='text-center'>
+                  <div className='mx-auto mb-4 h-12 w-12 rounded-full bg-muted flex items-center justify-center'>
+                    <Plus className='h-6 w-6' />
+                  </div>
+                  <h3 className='text-lg font-semibold'>No hay widgets</h3>
+                  <p className='text-muted-foreground mb-4'>
+                    Añade widgets desde el panel lateral para comenzar
+                  </p>
+                  <Button onClick={() => setSidebarOpen(true)}>
+                    Abrir Panel de Widgets
+                  </Button>
                 </div>
-              ))}
-            </div>
-          )}
-        </main>
+              </div>
+            ) : (
+              /* --------- Canvas con widgets --------- */
+              <div
+                ref={canvasRef}
+                className='relative min-h-[calc(100vh-8rem)] w-full'
+                style={{ userSelect: draggedWidget ? 'none' : 'auto' }}
+              >
+                {widgets.map((widget) => (
+                  <div
+                    key={widget.id}
+                    className={cn(
+                      'absolute transition-shadow duration-200',
+                      draggedWidget === widget.id && 'shadow-2xl'
+                    )}
+                    style={{
+                      left: widget.position.x,
+                      top: widget.position.y,
+                      width: widget.size.width,
+                      height: widget.size.height,
+                      zIndex: widget.zIndex,
+                      cursor:
+                        draggedWidget === widget.id ? 'grabbing' : 'default'
+                    }}
+                    onMouseDown={() => bringToFront(widget.id)}
+                  >
+                    {/* Tarjeta del widget */}
+                    <Card className='h-full'>
+                      <CardHeader
+                        className='flex flex-row items-center justify-between space-y-0 pb-2 cursor-grab active:cursor-grabbing'
+                        onMouseDown={(e) => handleMouseDown(e, widget.id)}
+                      >
+                        <div className='flex items-center gap-2'>
+                          <GripVertical className='h-4 w-4 text-muted-foreground' />
+                          <CardTitle className='text-sm font-medium'>
+                            {widget.title}
+                          </CardTitle>
+                        </div>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          className='h-6 w-6'
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            removeWidget(widget.id)
+                          }}
+                        >
+                          <X className='h-3 w-3' />
+                        </Button>
+                      </CardHeader>
+
+                      {/* Contenido dinámico */}
+                      <CardContent className='p-0 h-[calc(100%-4rem)] overflow-hidden'>
+                        {renderWidgetContent(widget.type)}
+                      </CardContent>
+                    </Card>
+
+                    {/* Handle de redimensionamiento */}
+                    <div
+                      className='absolute bottom-0 right-0 w-4 h-4 cursor-se-resize opacity-50 hover:opacity-100'
+                      style={{
+                        background:
+                          'linear-gradient(-45deg, transparent 30%, #666 30%, #666 40%, transparent 40%, transparent 60%, #666 60%, #666 70%, transparent 70%)'
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation()
+                        handleResizeStart(widget.id)
+
+                        const startX = e.clientX
+                        const startY = e.clientY
+                        const startWidth = widget.size.width
+                        const startHeight = widget.size.height
+
+                        const handleMouseMove = (e: MouseEvent) => {
+                          const newWidth = Math.max(
+                            200,
+                            startWidth + (e.clientX - startX)
+                          )
+                          const newHeight = Math.max(
+                            150,
+                            startHeight + (e.clientY - startY)
+                          )
+                          setWidgets((prev) =>
+                            prev.map((w) =>
+                              w.id === widget.id
+                                ? {
+                                    ...w,
+                                    size: { width: newWidth, height: newHeight }
+                                  }
+                                : w
+                            )
+                          )
+                        }
+
+                        const handleMouseUp = () => {
+                          handleResizeEnd()
+                          document.removeEventListener(
+                            'mousemove',
+                            handleMouseMove
+                          )
+                          document.removeEventListener('mouseup', handleMouseUp)
+                        }
+
+                        document.addEventListener('mousemove', handleMouseMove)
+                        document.addEventListener('mouseup', handleMouseUp)
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </PageWrapper>
+        </div>
+        {/* ───────── Fin columna 2 ───────── */}
       </div>
+      {/* ───────── Fin fila principal ───────── */}
     </div>
   )
 }
