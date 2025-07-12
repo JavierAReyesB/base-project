@@ -52,7 +52,7 @@ const cards: DashboardCard[] = [
     value: '1,240',
     badge: '+8% este mes',
     badgeVariant: 'secondary',
-    size: 'lg',
+    size: 'md',
     content: (
       <p>
         Este mes se han registrado más usuarios activos que el anterior, con un
@@ -80,7 +80,7 @@ const cards: DashboardCard[] = [
     value: '57',
     badge: '+14 nuevos',
     badgeVariant: 'destructive',
-    size: 'lg',
+    size: 'md',
     content: (
       <p>
         Actualmente hay 57 tickets activos. La mayoría corresponden a soporte
@@ -94,7 +94,7 @@ const cards: DashboardCard[] = [
     value: '92 %',
     badge: 'Excelente',
     badgeVariant: 'default',
-    size: 'lg',
+    size: 'md',
     content: (
       <p>
         El índice de satisfacción de usuarios es del 92 %, manteniéndose
@@ -154,11 +154,11 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className='flex flex-col min-h-[calc(100vh-3.5rem)]'>
+    <div className='flex flex-col h-full'>
       <PageWrapper
         title='Dashboard'
         description='Panel principal de control y análisis del sistema.'
-        className='flex-1 flex flex-col'
+        className='flex-1 flex flex-col min-h-screen overflow-y-auto'
       >
         {/* KPIs */}
         <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>

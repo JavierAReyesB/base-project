@@ -17,7 +17,7 @@ export default async function Layout({
 
   return (
     <html lang='es'>
-      <body>
+      <body className='h-full min-h-screen'>
         {/* Header fijo */}
         <Header />
 

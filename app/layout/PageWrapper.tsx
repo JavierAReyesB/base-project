@@ -31,18 +31,18 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({
   }
 
   return (
-    <div className='relative flex h-screen overflow-hidden'>
+    <div className='relative flex flex-1 h-[100dvh] md:h-screen overflow-hidden'>
       {/* Fondo 3D detrás de todo */}
       <Enhanced3DBackground />
 
       {/* CONTENIDO PRINCIPAL */}
       <main
         className={cn(
-          'flex-1 overflow-y-auto transition-all duration-300 z-10',
+          'flex-1 overflow-y-auto max-h-[90dvh] md:max-h-screen pb-20 md:pb-0 transition-all duration-300 z-10',
           className
         )}
       >
-        <div className='flex flex-col px-4 md:px-6 pt-[3.5rem] space-y-6'>
+        <div className='flex flex-col px-4 md:px-6 pt-[1rem] space-y-6'>
           {(title || description) && (
             <div>
               {title && <h1 className='text-2xl font-bold'>{title}</h1>}
