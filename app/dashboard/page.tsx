@@ -560,7 +560,7 @@ export default function CustomizableDashboard() {
         {/* ════════════ Sidebar (columna 1) ════════════ */}
         <aside
           className={cn(
-            'sticky top-14 h-[calc(100vh-3.5rem)] w-80 border-r bg-muted/40 transition-all duration-300',
+            'sticky top-14 z-30 h-[calc(100vh-3.5rem)] w-80 border-r bg-muted/40 transition-all duration-300',
             !sidebarOpen && 'w-0 overflow-hidden'
           )}
         >
@@ -623,7 +623,6 @@ export default function CustomizableDashboard() {
           <PageWrapper
             title='Dashboard'
             description='Panel personalizable de widgets.'
-            className='flex-1 p-6 pt-14' /* pt-14 evita que el header gris tape el contenido */
           >
             {/* --------- Si aún no hay widgets --------- */}
             {widgets.length === 0 ? (

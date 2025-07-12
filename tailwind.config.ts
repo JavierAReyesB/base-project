@@ -68,30 +68,44 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
+      /* ▸ Keyframes existentes + nuevas esferas flotantes */
       keyframes: {
+        /* Accordion */
         'accordion-down': {
-          from: {
-            height: '0'
-          },
-          to: {
-            height: 'var(--radix-accordion-content-height)'
-          }
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' }
         },
         'accordion-up': {
-          from: {
-            height: 'var(--radix-accordion-content-height)'
-          },
-          to: {
-            height: '0'
-          }
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' }
+        },
+        /* Esfera flotante 0 */
+        'float-sphere-0': {
+          '0%,100%': { transform: 'translate(-50%, -50%) translateY(0)' },
+          '50%': { transform: 'translate(-50%, -50%) translateY(-25px)' }
+        },
+        /* Esfera flotante 1 */
+        'float-sphere-1': {
+          '0%,100%': { transform: 'translate(-50%, -50%) translateY(0)' },
+          '50%': { transform: 'translate(-50%, -50%) translateY(-20px)' }
+        },
+        /* Esfera flotante 2 */
+        'float-sphere-2': {
+          '0%,100%': { transform: 'translate(-50%, -50%) translateY(0)' },
+          '50%': { transform: 'translate(-50%, -50%) translateY(-15px)' }
         }
       },
+      /* ▸ Animaciones existentes + nuevas esferas flotantes */
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        'float-sphere-0': 'float-sphere-0 18s ease-in-out infinite',
+        'float-sphere-1': 'float-sphere-1 21s ease-in-out infinite',
+        'float-sphere-2': 'float-sphere-2 24s ease-in-out infinite'
       }
     }
   },
   plugins: [require('tailwindcss-animate')]
 }
+
 export default config

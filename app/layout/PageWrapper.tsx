@@ -1,5 +1,15 @@
+/* PageWrapper.tsx */
+'use client'
+
+import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
-import React from 'react'
+import SidebarPanel from './SidebarPanel'
+import SidebarToggleBar from './SidebarToggleBar'
+import ChatPanel from './ChatPanel'
+import Enhanced3DBackground from '@/styles/enhanced3dbackground' // <— asegúrate de que la
+//                              ruta+mayúsculas coincide con el nombre real del fichero
+
+type PanelKey = 'chat'
 
 interface PageWrapperProps {
   className?: string
@@ -8,28 +18,55 @@ interface PageWrapperProps {
   description?: string
 }
 
-export function PageWrapper({
+export const PageWrapper: React.FC<PageWrapperProps> = ({
   className,
   children,
   title,
   description
-}: PageWrapperProps) {
+}) => {
+  const [activePanel, setActivePanel] = useState<PanelKey | null>(null)
+
+  const panels: Record<PanelKey, React.ReactNode> = {
+    chat: <ChatPanel />
+  }
+
   return (
-    <div
-      className={cn(
-        'flex-1 flex flex-col px-4 md:px-6 pt-[3.5rem] space-y-6',
-        className
-      )}
-    >
-      {(title || description) && (
-        <div>
-          {title && <h1 className='text-2xl font-bold'>{title}</h1>}
-          {description && (
-            <p className='text-sm text-muted-foreground'>{description}</p>
+    <div className='relative flex h-screen overflow-hidden'>
+      {/* Fondo 3D detrás de todo */}
+      <Enhanced3DBackground />
+
+      {/* CONTENIDO PRINCIPAL */}
+      <main
+        className={cn(
+          'flex-1 overflow-y-auto transition-all duration-300 z-10',
+          className
+        )}
+      >
+        <div className='flex flex-col px-4 md:px-6 pt-[3.5rem] space-y-6'>
+          {(title || description) && (
+            <div>
+              {title && <h1 className='text-2xl font-bold'>{title}</h1>}
+              {description && (
+                <p className='text-sm text-muted-foreground'>{description}</p>
+              )}
+            </div>
           )}
+          {children}
         </div>
-      )}
-      {children}
+      </main>
+
+      {/* SIDEBAR + BARRA envueltos con z-20 */}
+      <div className='relative z-20 flex'>
+        <SidebarPanel
+          active={activePanel}
+          panels={panels}
+          onClose={() => setActivePanel(null)}
+        />
+
+        <SidebarToggleBar active={activePanel} onToggle={setActivePanel} />
+      </div>
     </div>
   )
 }
+
+export default PageWrapper
