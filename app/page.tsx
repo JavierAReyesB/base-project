@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, type ReactNode } from 'react'
 import { PageWrapper } from '@/app/layout/PageWrapper'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -22,8 +22,21 @@ import {
 } from 'recharts'
 import { GenericDrawer } from '@/components/drawer/GenericDrawer'
 import { useDrawerContext } from '@/components/drawer/DrawerProvider'
+import type { CardSize } from '@/components/ui/card' // ✅ reutilización aquí
+
+/* ────────────── Tipo local para las tarjetas ────────────── */
+interface DashboardCard {
+  key: string
+  title: string
+  value: string
+  badge: string
+  badgeVariant: string
+  content: ReactNode
+  size?: CardSize
+}
 
 /* ────────────── Datos de ejemplo ────────────── */
+
 const chartData = [
   { name: 'Ene', usuarios: 240 },
   { name: 'Feb', usuarios: 360 },
@@ -32,17 +45,18 @@ const chartData = [
   { name: 'May', usuarios: 520 }
 ]
 
-const cards = [
+const cards: DashboardCard[] = [
   {
     key: 'usuarios',
     title: 'Usuarios activos',
     value: '1,240',
     badge: '+8% este mes',
     badgeVariant: 'secondary',
+    size: 'lg',
     content: (
       <p>
         Este mes se han registrado más usuarios activos que el anterior, con un
-        incremento del 8 %.
+        incremento del 8 %.
       </p>
     )
   },
@@ -52,6 +66,7 @@ const cards = [
     value: '324',
     badge: '+5 desde abril',
     badgeVariant: 'outline',
+    size: 'md',
     content: (
       <p>
         Se han firmado 324 contratos, superando los valores de los últimos tres
@@ -65,6 +80,7 @@ const cards = [
     value: '57',
     badge: '+14 nuevos',
     badgeVariant: 'destructive',
+    size: 'lg',
     content: (
       <p>
         Actualmente hay 57 tickets activos. La mayoría corresponden a soporte
@@ -75,22 +91,22 @@ const cards = [
   {
     key: 'satisfaccion',
     title: 'Satisfacción',
-    value: '92 %',
+    value: '92 %',
     badge: 'Excelente',
     badgeVariant: 'default',
+    size: 'lg',
     content: (
       <p>
-        El índice de satisfacción de usuarios es del 92 %, manteniéndose
+        El índice de satisfacción de usuarios es del 92 %, manteniéndose
         estable.
       </p>
     )
   }
 ]
 
-/* ─────────────────────────────────────────────── */
+/* ───────────────────────────────────────────── */
 
 export default function DashboardPage() {
-  /* --- estado drawers gestionado localmente --- */
   const [rightOpen, setRightOpen] = useState(false)
   const [rightPinned, setRightPinned] = useState(false)
   const [rightWidth, setRightWidth] = useState<'full' | 'half'>('half')
@@ -100,20 +116,16 @@ export default function DashboardPage() {
   const [leftWidth, setLeftWidth] = useState<'full' | 'half'>('half')
   const [leftKey, setLeftKey] = useState<string | null>(null)
 
-  /* --- drawer restaurado desde barra minimizada --- */
   const { openDrawers, closeDrawer } = useDrawerContext()
 
-  /* Si se restaura un drawer minimizado, ábrelo con la lógica existente */
   useEffect(() => {
     if (!openDrawers.length) return
 
-    // Tomamos el último restaurado (openDrawers mantiene orden de push)
     const restored = openDrawers[openDrawers.length - 1]
-    if (!restored.instanceId) return // aseguramos que tenga key válida
+    if (!restored.instanceId) return
 
-    const key = restored.instanceId // usamos instanceId para enlazar con cards
+    const key = restored.instanceId
 
-    // Reutilizamos la lógica de apertura ya existente
     if (rightOpen && rightPinned) {
       setLeftKey(key)
       setLeftOpen(true)
@@ -123,16 +135,13 @@ export default function DashboardPage() {
       setLeftOpen(false)
     }
 
-    // Cerramos ese drawer del contexto global, ya que lo manejamos localmente
     closeDrawer(restored.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openDrawers]) // solo cuando cambia la lista de drawers abiertos
+  }, [openDrawers])
 
-  /* --- tarjetitas seleccionadas --- */
   const rightCard = cards.find((c) => c.key === rightKey)
   const leftCard = cards.find((c) => c.key === leftKey)
 
-  /** Clic en tarjeta KPI */
   const handleCardClick = (key: string) => {
     if (rightOpen && rightPinned) {
       setLeftKey(key)
@@ -156,6 +165,7 @@ export default function DashboardPage() {
           {cards.map((card) => (
             <Card
               key={card.key}
+              size={card.size}
               onClick={() => handleCardClick(card.key)}
               className='cursor-pointer hover:shadow-lg transition-shadow'
             >
@@ -213,7 +223,6 @@ export default function DashboardPage() {
         </section>
       </PageWrapper>
 
-      {/* Drawer derecho */}
       <GenericDrawer
         title={rightCard?.title ?? ''}
         visible={rightOpen}
@@ -224,12 +233,11 @@ export default function DashboardPage() {
         }
         onPin={setRightPinned}
         hideBackdrop={leftOpen}
-        instanceId={rightKey ?? undefined} // ← para que el minimizado lleve la key
+        instanceId={rightKey ?? undefined}
       >
         {rightCard?.content}
       </GenericDrawer>
 
-      {/* Drawer izquierdo */}
       <GenericDrawer
         title={leftCard?.title ?? ''}
         visible={leftOpen}
