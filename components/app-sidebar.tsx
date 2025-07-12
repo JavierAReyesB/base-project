@@ -6,7 +6,8 @@ import {
   Users,
   Package,
   Settings,
-  LayoutDashboard // ⬅️ nuevo icono para la ruta Dashboard
+  LayoutDashboard,
+  BarChart2
 } from 'lucide-react'
 import {
   Sidebar,
@@ -31,7 +32,8 @@ const mainNavigation = [
   { title: 'Inicio', icon: Home, url: '#', isActive: true },
   { title: 'Usuarios', icon: Users, url: '#' },
   { title: 'Productos', icon: Package, url: '#' },
-  { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' }
+  { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
+  { title: 'Trial Page', icon: BarChart2, url: '/trialpage' } // 👈 nuevo elemento
 ]
 
 export function AppSidebar() {
