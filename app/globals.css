@@ -103,3 +103,18 @@ body {
     @apply bg-background text-foreground;
   }
 }
+/*  Efecto “glass” para tablas ag-Grid con clase glass-table  */
+.ag-theme-alpine.glass-table {
+  --ag-background-color: rgba(255, 255, 255, 0.05);
+  --ag-header-background-color: rgba(255, 255, 255, 0.08);
+  --ag-odd-row-background-color: rgba(255, 255, 255, 0.04);
+  --ag-foreground-color: #1f2937;
+  --ag-border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ag-theme-alpine.glass-table .ag-root-wrapper {
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

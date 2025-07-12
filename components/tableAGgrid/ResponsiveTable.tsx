@@ -18,9 +18,11 @@ import {
 
 import MobileCard, { MobileCardProps } from '../tableAGgrid/MobileCard'
 
+/* ➜  IMPORTA el módulo de estilos con el efecto glass */
+import styles from './ResponsiveTable.module.css'
+
 /* -------------------------------------------------------------
  *  REGISTRO DE MÓDULOS – AG GRID COMMUNITY v34+
- *  ✅ AllCommunityModule incluye todas las features gratis.
  * ----------------------------------------------------------- */
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community'
 ModuleRegistry.registerModules([AllCommunityModule])
@@ -29,17 +31,11 @@ ModuleRegistry.registerModules([AllCommunityModule])
  *  TIPOS DE PROPS
  * ----------------------------------------------------------- */
 interface ResponsiveTableProps<T extends Record<string, any>> {
-  /** ColumnDefs para la vista de escritorio */
   columnDefs: any[]
-  /** Datos de la tabla */
   rowData: T[]
-  /** Ancho (px) a partir del cual pasamos a vista móvil */
   breakpoint?: number
-  /** Activar paginación en escritorio */
   pagination?: boolean
-  /** Tarjeta móvil personalizada */
   renderCard?: (row: T) => ReactNode
-  /** Props por defecto para MobileCard si no usas renderCard */
   mobileCardProps?: Omit<MobileCardProps<T>, 'data'>
 }
 
@@ -61,7 +57,7 @@ export default function ResponsiveTable<T extends Record<string, any>>(
   const [isMobile, setIsMobile] = useState(false)
   const gridRef = useRef<AgGridReact<T>>(null)
 
-  /* --------- Detectar tamaño de pantalla --------- */
+  /* Detectar tamaño de pantalla */
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < breakpoint)
     handleResize()
@@ -69,7 +65,7 @@ export default function ResponsiveTable<T extends Record<string, any>>(
     return () => window.removeEventListener('resize', handleResize)
   }, [breakpoint])
 
-  /* --------- Ajustar columnas al ancho --------- */
+  /* Ajustar columnas al ancho */
   const onGridReady = useCallback(() => {
     gridRef.current?.api.sizeColumnsToFit()
   }, [])
@@ -91,7 +87,10 @@ export default function ResponsiveTable<T extends Record<string, any>>(
 
   /* --------- ESCRITORIO --------- */
   return (
-    <div className='ag-theme-alpine w-full' style={{ minHeight: 400 }}>
+    <div
+      className='ag-theme-alpine glass-table w-full'
+      style={{ minHeight: 400 }}
+    >
       <AgGridReact<T>
         theme='legacy'
         ref={gridRef}
